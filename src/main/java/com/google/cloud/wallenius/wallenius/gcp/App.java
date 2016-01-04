@@ -26,14 +26,14 @@ public class App {
     public static void main(String[] args) throws IOException {
         
         BaseEndpoints endPoints = new BaseEndpoints(new SimpleHttpClient());
+        PrimeHelper primeHelper = new PrimeHelper();
         Gson gson = new Gson();
         
         ID = new Random().nextInt(1000);
 
         port(8080);
         get("/hello", (req, res) -> endPoints.getIt(), gson::toJson);
-        post("/hello", (req, res) -> endPoints.roundTrip(gson.fromJson(req.body(), SillyBean.class)), gson::toJson);
-
+        get("/nextPrimes", (req, res) -> primeHelper.findNextPrimes(parseIntOrSetToDefault(req.queryParams("startValue")), 100), gson::toJson);
         get("/metadata", (req, res) -> endPoints.instanceMetadata(), gson::toJson);
         
         get("/healthcheck", (req, res) -> new HealthCheck(ID, System.currentTimeMillis() - STARTTIME)  , gson::toJson);
@@ -49,5 +49,14 @@ public class App {
             response.status(400);
             response.body(gson.toJson("Could not parse JSON"));
         });
+    }
+    
+    private static Integer parseIntOrSetToDefault(String input) {
+        try {
+            return Integer.parseInt(input, 10);
+        } catch (Exception e) {
+            logger.debug("Could not parse int from input '" + input + "'");
+            return 0;
+        }
     }
 }
