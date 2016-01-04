@@ -33,7 +33,8 @@ public class App {
 
         port(8080);
         get("/hello", (req, res) -> endPoints.getIt(), gson::toJson);
-        get("/nextPrimes", (req, res) -> primeHelper.findNextPrimes(parseIntOrSetToDefault(req.queryParams("startValue")), 100), gson::toJson);
+        get("/nextPrimes", (req, res) -> 
+                primeHelper.findNextPrimes(parseIntOrSetToDefault(req.queryParams("startValue")), 100), gson::toJson);
         get("/metadata", (req, res) -> endPoints.instanceMetadata(), gson::toJson);
         
         get("/healthcheck", (req, res) -> new HealthCheck(ID, System.currentTimeMillis() - STARTTIME)  , gson::toJson);
