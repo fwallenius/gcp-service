@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
  * @author wallenius
  */
 public class App {
+    
+    public final static String VERSION = "epiphany eric";
 
     private final static Logger logger = LoggerFactory.getLogger(App.class);
     private static Integer ID;
@@ -40,6 +42,7 @@ public class App {
         get("/healthcheck", (req, res) -> new HealthCheck(ID, System.currentTimeMillis() - STARTTIME)  , gson::toJson);
         
         after((request, response) -> {
+            logger.debug("Request for: " + request.pathInfo());
             response.header("Content-Type", "application/json;charset=utf-8");
         });
 

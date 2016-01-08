@@ -1,20 +1,21 @@
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: frontend
+  name: frontend-rc-v2
   labels:
     name: frontend
 spec:
   replicas: 3
   selector:
     name: frontend
+    version: v2
   template:
     metadata:
       labels:
         name: frontend
     spec:
       containers:
-      - name: w-gcp-container
-        image: gcr.io/wallenius-k8s/w-gcp
+      - name: frontend-app
+        image: gcr.io/wallenius-k8s/frontend-app
         ports:
         - containerPort: 8080
